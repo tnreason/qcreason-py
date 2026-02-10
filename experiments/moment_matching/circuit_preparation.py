@@ -2,22 +2,35 @@ from qcreason import representation, engine
 import math
 
 
+def filter_headOperations(operationList, headColor):
+    return [operation for operation in operationList if headColor in operation["targetQubits"]]
+
+
 ## Do the rotations
 def add_rotations(formula, repNum, oldDistPreparations, distributedQubits, ancillaQubit="A"):
     """
     Addes Grover rotations to a circuit, when the ancilla is disentangled with the distributedQubits and in the antisymmetric state
     :param formula: Formula to be amplified
-    :param repNum:
+    :param repNum: Number of repetitions of the rotation
     :param oldDistPreparations: current state preparating circuit (without ancilla preparation, which has to)
     :param distributedQubits:
     :param ancillaQubit:
     :return:
     """
+    ## If the number of repetition is negative, then positive amplification of the negated formula
+    if repNum < 0:
+        repNum = -repNum
+        formula = ["not", formula]
+
     ## Start with preparing the old distribution
     newDistPreparations = oldDistPreparations.copy()
     for repPos in range(repNum):
         ## Reflection on the models of the formula
         newDistPreparations += representation.generate_formula_operations(formula, headColor=ancillaQubit)
+        ## Uncompute the auxiliary qubits
+        newDistPreparations += filter_headOperations(
+            representation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
+            headColor=ancillaQubit)
         ## Reflection on the previously prepared state
         newDistPreparations += oldDistPreparations[::-1]  ## Adjoint! Here assumed that we have self-adjoint gates only
         newDistPreparations += representation.get_groundstate_reflexion_operations(distributedQubits)
@@ -45,8 +58,8 @@ def get_achievable_means(currentMean, maxRotations):
     :param maxRotations:
     :return:
     """
-    return [(math.sin((1 + 2 * rotNum) *  math.asin(math.sqrt(currentMean)))) ** 2 for rotNum in
-            range(maxRotations + 1) if (1 + 2 * rotNum) *  math.asin(math.sqrt(currentMean)) <= math.pi/2]
+    return [(math.sin((1 + 2 * rotNum) * math.asin(math.sqrt(currentMean)))) ** 2 for rotNum in
+            range(maxRotations + 1) if (1 + 2 * rotNum) * math.asin(math.sqrt(currentMean)) <= math.pi / 2]
 
 
 def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=None):
@@ -58,22 +71,32 @@ def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=No
     :return:
     """
     if lossFunction is None:
-        lossFunction = lambda x, i: abs(targetMean - x)
+        # Default the absolute difference, without regularization
+        lossFunction = lambda x, i, tMean: abs(tMean - x)
 
-    if targetMean <= currentMean or currentMean == 0:
+    if currentMean == 0:
         return 0
     else:
-        meanDifs = [lossFunction(aMean, i) for i, aMean in enumerate(get_achievable_means(currentMean, maxRotations))]
-        return meanDifs.index(min(meanDifs))
+        meanDifs = [lossFunction(aMean, i, targetMean) for i, aMean in enumerate(get_achievable_means(currentMean, maxRotations))]
+        negMeanDifs = [lossFunction(aMean, i, 1-targetMean) for i, aMean in
+                       enumerate(get_achievable_means(1 - currentMean, maxRotations))]
+        if min(meanDifs) <= min(negMeanDifs):
+            return meanDifs.index(min(meanDifs))
+        else:
+            return -negMeanDifs.index(min(negMeanDifs))
 
 
 if __name__ == "__main__":
+    testOperations = representation.generate_formula_operations(["or", ["and", "sledz", "jaszczur"], ["not", "slimak"]],
+                                                                headColor="Ancilla")
+    assert len(filter_headOperations(testOperations, "Ancilla")) == len(testOperations) - 2
+
     # Check overrotation prevention
-    assert len(get_achievable_means(0.98123,100))==1
-    assert len(get_achievable_means(0.04,100))==4
+    assert len(get_achievable_means(0.98123, 100)) == 1
+    assert len(get_achievable_means(0.04, 100)) == 4
 
     testMean = 0.2131
-    assert abs(get_achievable_means(testMean,35)[0] - testMean)<0.000001
+    assert abs(get_achievable_means(testMean, 35)[0] - testMean) < 0.000001
 
     assert all([mean <= 1 and mean >= 0 for mean in get_achievable_means(0.23412, 35)])
     assert estimate_rotations(0.5, 0.1231) == 0
@@ -81,7 +104,7 @@ if __name__ == "__main__":
     assert estimate_rotations(0.001, 0.54, 10) == 10
 
     targetM = 0.234
-    regLossFunction = lambda x, i: i / 100 + abs(targetM - x)
+    regLossFunction = lambda x, i, tM: i / 100 + abs(tM - x)
     assert estimate_rotations(0.01231, targetMean=targetM, lossFunction=regLossFunction) == 2
 
     # ## Example for a circuit preparation

@@ -25,8 +25,8 @@ class InversionTest(unittest.TestCase):
         hadamardOperations = [{"unitary": "H", "targetQubits": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
                       + representation.generate_formula_operations(formula1, headColor="Y")
-                      + representation.generate_formula_operations(formula2, ajoint=True, headColor="Y")
-                      + representation.generate_formula_operations(["not", "A"], ajoint=True)
+                      + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
+                      + representation.generate_formula_operations(["not", "A"], adjoint=True)
                       + hadamardOperations
                       )
         circuit = engine.get_circuit()(specDict={"operations": operations})
@@ -41,7 +41,7 @@ class InversionTest(unittest.TestCase):
         hadamardOperations = [{"unitary": "H", "targetQubits": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
                       + representation.generate_formula_operations(formula1, headColor="Y")
-                      + representation.generate_formula_operations(formula2, ajoint=True, headColor="Y")
+                      + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
                       + hadamardOperations
                       )
         circuit = engine.get_circuit()(specDict={"operations": operations})

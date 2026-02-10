@@ -8,7 +8,7 @@ hadamardOperations = [{"unitary": "H", "targetQubits": ["A"]},
                       {"unitary": "H", "targetQubits": ["B"]}]
 operations = (hadamardOperations
               + representation.generate_formula_operations(firstFormula, headColor="Y")
-              + representation.generate_formula_operations(secFormula, ajoint=True, headColor="Y")
+              + representation.generate_formula_operations(secFormula, adjoint=True, headColor="Y")
               + hadamardOperations
               )
 
