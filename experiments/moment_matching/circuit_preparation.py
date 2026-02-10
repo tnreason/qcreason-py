@@ -3,7 +3,7 @@ import math
 
 
 ## Do the rotations
-def add_rotations(formula, repNum, oldDistPreparations):
+def add_rotations(formula, repNum, oldDistPreparations, distributedQubits, ancillaQubit="A"):
     ## Start with preparing the old distribution
     newDistPreparations = oldDistPreparations.copy()
     for repPos in range(repNum):
@@ -16,7 +16,7 @@ def add_rotations(formula, repNum, oldDistPreparations):
     return newDistPreparations
 
 
-def prepare_formulaList_rotations(formulaList, startCircuit):
+def prepare_formulaList_rotations(formulaList, startCircuit, distributedQubits):
     """
     Iterate through the formulas and prepare
     :param formulaList: List of pairs, the rotation number and the formula in nested list syntax
@@ -25,7 +25,7 @@ def prepare_formulaList_rotations(formulaList, startCircuit):
     """
     distPreparations = startCircuit.copy()
     for repNum, formula in formulaList:
-        distPreparations = add_rotations(formula, repNum, distPreparations)
+        distPreparations = add_rotations(formula, repNum, distPreparations, distributedQubits)
     return distPreparations
 
 
@@ -40,7 +40,7 @@ def get_achievable_means(currentMean, maxRotations):
             range(maxRotations + 1)]
 
 
-def estimate_rotations(currentMean, targetMean, maxRotations=10):
+def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=None):
     """
     Computes the number of rotations such that the absolute difference to the target mean is minimized
     :param currentMean:
@@ -48,10 +48,13 @@ def estimate_rotations(currentMean, targetMean, maxRotations=10):
     :param maxRotations:
     :return:
     """
+    if lossFunction is None:
+        lossFunction = lambda x, i: abs(targetMean - x)
+
     if targetMean <= currentMean or currentMean == 0:
         return 0
     else:
-        meanDifs = [abs(targetMean - aMean) for aMean in get_achievable_means(currentMean, maxRotations)]
+        meanDifs = [lossFunction(aMean, i) for i, aMean in enumerate(get_achievable_means(currentMean, maxRotations))]
         return meanDifs.index(min(meanDifs))
 
 
@@ -60,6 +63,10 @@ if __name__ == "__main__":
     assert estimate_rotations(0.5, 0.1231) == 0
     assert estimate_rotations(0.123, 0.123) == 0
     assert estimate_rotations(0.001, 0.54, 10) == 10
+
+    targetM = 0.234
+    regLossFunction = lambda x, i: i / 100 + abs(targetM - x)
+    print(estimate_rotations(0.01231, targetMean=targetM, lossFunction=regLossFunction))
 
     ## Example for a circuit preparation
     dOrder = 3
@@ -70,6 +77,6 @@ if __name__ == "__main__":
         {"unitary": "X", "targetQubits": [ancillaQubit]}, {"unitary": "H", "targetQubits": [ancillaQubit]}]
     startCircuit = [{"unitary": "H", "targetQubits": [color]} for color in distributedQubits]
 
-    allDistPreparations = prepare_formulaList_rotations([(2, ["and", "X0", "X1"]), (1, ["not", "X0"])], startCircuit)
+    allDistPreparations = prepare_formulaList_rotations([(2, ["and", "X0", "X1"]), (1, ["not", "X0"])], startCircuit, distributedQubits)
     circ = engine.get_circuit()(specDict={"operations": ancillaPreparation + allDistPreparations})
     # circ.visualize()

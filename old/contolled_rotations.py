@@ -12,12 +12,12 @@ import numpy as np
 def add_rotation_slices(sliceList, headColor):
     for angle, posDict in sliceList:
         if len(posDict) == 0:
-            circ.circuit.ry(angle, circ.qubitDict[headColor])
+            circ.circuitOperations.ry(angle, circ.qubitDict[headColor])
             continue
 
         for inColor in posDict:
             if posDict[inColor] == 0:
-                circ.circuit.x(circ.qubitDict[inColor])
+                circ.circuitOperations.x(circ.qubitDict[inColor])
 
         control_qubits = [circ.qubitDict[inColor] for inColor in posDict]
         target_qubit = circ.qubitDict[headColor]
@@ -25,11 +25,11 @@ def add_rotation_slices(sliceList, headColor):
         ry_gate = RYGate(angle)
         cry_gate = ry_gate.control(len(control_qubits))
 
-        circ.circuit.append(cry_gate, control_qubits + [target_qubit])
+        circ.circuitOperations.append(cry_gate, control_qubits + [target_qubit])
 
         for inColor in posDict:
             if posDict[inColor] == 0:
-                circ.circuit.x(circ.qubitDict[inColor])
+                circ.circuitOperations.x(circ.qubitDict[inColor])
 
 
 
@@ -47,5 +47,5 @@ if __name__ == "__main__":
         (pi / 6, {})
     ]
     add_rotation_slices(sliceList, "c")
-    circ.circuit.draw("mpl")
+    circ.circuitOperations.draw("mpl")
     plt.show()
