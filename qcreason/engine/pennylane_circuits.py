@@ -7,32 +7,32 @@ from qcreason.engine import helpers as hp
 
 def get_operation_from_unitaryDict(unitaryDict):
     if unitaryDict["unitary"] == "H":
-        return [("H", [unitaryDict["targetQubits"]])]
+        return [("H", [unitaryDict["target"]])]
     elif unitaryDict["unitary"] == "X":
-        return [("X", [unitaryDict["targetQubits"]])]
+        return [("X", [unitaryDict["target"]])]
     elif unitaryDict["unitary"] == "Z":
-        return [("Z", [unitaryDict["targetQubits"]])]
+        return [("Z", [unitaryDict["target"]])]
     elif unitaryDict["unitary"] == "MCZ":
         return [("X", [controlKey]) for controlKey in unitaryDict["control"] if
                 unitaryDict["control"][controlKey] == 0] + [
-            ("MCZ", unitaryDict["control"].keys(), unitaryDict["targetQubits"][0])] + [("X", [controlKey]) for
+            ("MCZ", unitaryDict["control"].keys(), unitaryDict["target"][0])] + [("X", [controlKey]) for
                                                                                        controlKey
                                                                                        in unitaryDict["control"] if
                                                                                        unitaryDict["control"][
                                                                                            controlKey] == 0]
     elif unitaryDict["unitary"] == "MCX":
         if len(unitaryDict["control"]) == 0:
-            return [("X", [unitaryDict["targetQubits"][0]])]
+            return [("X", [unitaryDict["target"][0]])]
         return [("X", [controlKey]) for controlKey in unitaryDict["control"] if
                 unitaryDict["control"][controlKey] == 0] + [
-            ("MCX", unitaryDict["control"].keys(), unitaryDict["targetQubits"][0])] + [("X", [controlKey]) for
+            ("MCX", unitaryDict["control"].keys(), unitaryDict["target"][0])] + [("X", [controlKey]) for
                                                                                        controlKey
                                                                                        in unitaryDict["control"] if
                                                                                        unitaryDict["control"][
                                                                                            controlKey] == 0]
     elif unitaryDict["unitary"] == "MCRY":
         return [("X", [controlKey]) for controlKey in unitaryDict["control"] if unitaryDict["control"][controlKey] == 0] + [
-            ("CRot", unitaryDict["control"].keys(), unitaryDict["targetQubits"][0],
+            ("CRot", unitaryDict["control"].keys(), unitaryDict["target"][0],
              unitaryDict["parameters"]["angle"])] + [("X", [controlKey]) for controlKey
                                                      in unitaryDict["control"] if
                                                      unitaryDict["control"][controlKey] == 0]
@@ -154,6 +154,7 @@ class PennyLaneCircuit:
         @qml.qnode(dev)
         def circuit():
             for op in self.operations:
+                ## Can drop the MC and give the option of empty control dict
                 if op[0] == "H":
                     qml.Hadamard(wires=op[1][0])
                 elif op[0] == "X":
@@ -166,7 +167,7 @@ class PennyLaneCircuit:
                 elif op[0] == "MCX":
                     controls, target = op[1], op[2]
                     qml.ctrl(qml.PauliX, control=controls)(wires=target)
-                elif op[0] == "CRot":
+                elif op[0] == "CRot": ##
                     controls, target, angle = op[1], op[2], op[3]
                     #                qml.ctrl(qml.RZ(angle), control=controls)(wires=target)
                     qml.ctrl(lambda wires: qml.RY(angle, wires=wires), control=controls)(wires=target)

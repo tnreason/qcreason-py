@@ -21,10 +21,10 @@ def single_canParam_to_activation_circuit(canParam, statisticColor, ancillaColor
     """
 
     if isinstance(canParam, bool):
-        return [{"unitary": "MCX", "targetQubits": [ancillaColor], "control": {statisticColor: int(canParam)}}]
+        return [{"unitary": "MCX", "target": [ancillaColor], "control": {statisticColor: int(canParam)}}]
     else:
         maxValue = np.exp(max(0, canParam))
-        return [{"unitary": "MCRY", "targetQubits": [ancillaColor], "control": {statisticColor: val},
+        return [{"unitary": "MCRY", "target": [ancillaColor], "control": {statisticColor: val},
                  "parameters": {"angle": probability_to_angle(np.exp(val * canParam) / maxValue)}} for val in
                 interpretationList]
 
@@ -36,7 +36,7 @@ def activation_core_to_circuit(actCore, maxValue, ancillaColor="ancilla"):
     :param maxValue: maximum value (or upper bound) for the coefficients)
     :return:
     """
-    return [{"unitary": "MCRY", "targetQubits": [ancillaColor],
+    return [{"unitary": "MCRY", "target": [ancillaColor],
              "control": {color: idx[i] for i, color in enumerate(actCore.colors)},
              "parameters": {"angle": probability_to_angle(
                  actCore[{color: idx[i] for i, color in enumerate(actCore.colors)}] / maxValue)}} for idx in
@@ -50,7 +50,7 @@ def tn_to_circuit(coresDict, ancillaPrefix="ancilla_"):
     :param ancillaPrefix: Prefix for naming ancilla qubits corresponding to each core.
     :return: List of operations implementing the quantum circuit.
     """
-    operationsList = [{"unitary": "H", "targetQubits": [color]} for color in get_colors(coresDict)]
+    operationsList = [{"unitary": "H", "target": [color]} for color in get_colors(coresDict)]
     for coreName, core in coresDict.items():
         operationsList += activation_core_to_circuit(core, maxValue=core[core.get_argmax()],
                                                      ancillaColor=f"{ancillaPrefix}{coreName}")

@@ -22,7 +22,7 @@ class InversionTest(unittest.TestCase):
         formula1 = ["or", ["not", "A"], "B"]
         formula2 = ["imp", "A", "B"]
         distributedQubits = ["A", "B"]
-        hadamardOperations = [{"unitary": "H", "targetQubits": [dQubit]} for dQubit in distributedQubits]
+        hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
                       + representation.generate_formula_operations(formula1, headColor="Y")
                       + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
@@ -38,7 +38,7 @@ class InversionTest(unittest.TestCase):
         self.syntactically_equal_template(formula1=formula, formula2=formula, distributedQubits=distributedQubits)
 
     def syntactically_equal_template(self, formula1, formula2, distributedQubits, shotNum=10):
-        hadamardOperations = [{"unitary": "H", "targetQubits": [dQubit]} for dQubit in distributedQubits]
+        hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
                       + representation.generate_formula_operations(formula1, headColor="Y")
                       + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")

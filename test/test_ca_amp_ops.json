@@ -2,14 +2,14 @@
     "operations": [
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "c"
             ],
             "controlDict": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "a"
             ],
             "controlDict": {}
@@ -17,7 +17,7 @@
         [
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -27,7 +27,7 @@
             },
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -41,7 +41,7 @@
         ],
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -53,7 +53,7 @@
         },
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -65,21 +65,21 @@
         },
         {
             "unitary": "MCZ",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "c"
             ],
             "controlDict": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "a"
             ],
             "controlDict": {}
@@ -87,7 +87,7 @@
         [
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -97,7 +97,7 @@
             },
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -111,7 +111,7 @@
         ],
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -123,7 +123,7 @@
         },
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -135,35 +135,35 @@
         },
         {
             "unitary": "MCX",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "MCZ",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "MCX",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "c"
             ],
             "controlDict": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "a"
             ],
             "controlDict": {}
@@ -171,7 +171,7 @@
         [
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -181,7 +181,7 @@
             },
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -195,7 +195,7 @@
         ],
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -207,7 +207,7 @@
         },
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -219,21 +219,21 @@
         },
         {
             "unitary": "MCZ",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "c"
             ],
             "controlDict": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "a"
             ],
             "controlDict": {}
@@ -241,7 +241,7 @@
         [
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -251,7 +251,7 @@
             },
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -265,7 +265,7 @@
         ],
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -277,7 +277,7 @@
         },
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -289,35 +289,35 @@
         },
         {
             "unitary": "MCX",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "MCZ",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "MCX",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "c"
             ],
             "controlDict": {}
         },
         {
             "unitary": "H",
-            "targetQubits": [
+            "target": [
                 "a"
             ],
             "controlDict": {}
@@ -325,7 +325,7 @@
         [
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -335,7 +335,7 @@
             },
             {
                 "unitary": "MCX",
-                "targetQubits": [
+                "target": [
                     "(or_a_c)"
                 ],
                 "control": [
@@ -349,7 +349,7 @@
         ],
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {
@@ -361,7 +361,7 @@
         },
         {
             "unitary": "MCRY",
-            "targetQubits": [
+            "target": [
                 "ancilla_(or_a_c)"
             ],
             "control": {

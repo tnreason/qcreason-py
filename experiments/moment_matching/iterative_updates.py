@@ -18,7 +18,7 @@ def calculate_satisfaction(sampleDf, expression, coreType=None):
 
 
 def get_ancillaPreparationCircuit(ancillaColor="A"):
-    return [{"unitary": "X", "targetQubits": [ancillaColor]}, {"unitary": "H", "targetQubits": [ancillaColor]}]
+    return [{"unitary": "X", "target": [ancillaColor]}, {"unitary": "H", "target": [ancillaColor]}]
 
 
 class QuantumMomentMatcher:
@@ -35,7 +35,7 @@ class QuantumMomentMatcher:
             self.atomList = atomList
         else:
             self.atomList = []  # Implement: Extract atoms from expressionsDict
-        self.circuitOperations = [{"unitary": "H", "targetQubits": [color]} for color in self.atomList]
+        self.circuitOperations = [{"unitary": "H", "target": [color]} for color in self.atomList]
 
     def estimate_means(self, shotNum=1000, formulaKeys=None):
         """

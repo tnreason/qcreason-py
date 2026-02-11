@@ -2,14 +2,10 @@ from qcreason import representation, engine
 import math
 
 
-def filter_headOperations(operationList, headColor):
-    return [operation for operation in operationList if headColor in operation["targetQubits"]]
-
-
 ## Do the rotations
 def add_rotations(formula, repNum, oldDistPreparations, distributedQubits, ancillaQubit="A"):
     """
-    Addes Grover rotations to a circuit, when the ancilla is disentangled with the distributedQubits and in the antisymmetric state
+    Adds Grover rotations to a circuit, when the ancilla is disentangled with the distributedQubits and in the antisymmetric state
     :param formula: Formula to be amplified
     :param repNum: Number of repetitions of the rotation
     :param oldDistPreparations: current state preparating circuit (without ancilla preparation, which has to)
@@ -21,21 +17,28 @@ def add_rotations(formula, repNum, oldDistPreparations, distributedQubits, ancil
     if repNum < 0:
         repNum = -repNum
         formula = ["not", formula]
+    return oldDistPreparations + get_prep_f_grover(oldDistPreparations, formula, distributedQubits,
+                                                   ancillaQubit) * repNum
 
-    ## Start with preparing the old distribution
-    newDistPreparations = oldDistPreparations.copy()
-    for repPos in range(repNum):
-        ## Reflection on the models of the formula
-        newDistPreparations += representation.generate_formula_operations(formula, headColor=ancillaQubit)
-        ## Uncompute the auxiliary qubits
-        newDistPreparations += filter_headOperations(
-            representation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
-            headColor=ancillaQubit)
-        ## Reflection on the previously prepared state
-        newDistPreparations += oldDistPreparations[::-1]  ## Adjoint! Here assumed that we have self-adjoint gates only
-        newDistPreparations += representation.get_groundstate_reflexion_operations(distributedQubits)
-        newDistPreparations += oldDistPreparations
-    return newDistPreparations
+def filter_headOperations(operationList, headColor):
+    return [operation for operation in operationList if headColor in operation["target"]]
+
+def get_prep_f_grover(prepOps, formula, distributedQubits, ancillaQubit):
+    """
+    Prepare the effective grover (when acting on anti-symmetric ancilla qubit state), by
+    - decomposed computation circuit
+    - uncomputation of the auxiliar statistic qubits (using filter_headOperations to drop ancilla target unitaries)
+    - reflection on the prepared state (prepOps^T circ reflection on groundstate circ prepOps)
+    :param prepOps: ope
+    :param formula:
+    :param disQubits:
+    :param ancillaQubit:
+    :return:
+    """
+    return representation.generate_formula_operations(formula, headColor=ancillaQubit) + filter_headOperations(
+        representation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
+        headColor=ancillaQubit) + prepOps[::-1] + representation.get_groundstate_reflexion_operations(
+        distributedQubits) + prepOps
 
 
 def prepare_formulaList_rotations(formulaList, startCircuit, distributedQubits):
@@ -77,8 +80,9 @@ def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=No
     if currentMean == 0:
         return 0
     else:
-        meanDifs = [lossFunction(aMean, i, targetMean) for i, aMean in enumerate(get_achievable_means(currentMean, maxRotations))]
-        negMeanDifs = [lossFunction(aMean, i, 1-targetMean) for i, aMean in
+        meanDifs = [lossFunction(aMean, i, targetMean) for i, aMean in
+                    enumerate(get_achievable_means(currentMean, maxRotations))]
+        negMeanDifs = [lossFunction(aMean, i, 1 - targetMean) for i, aMean in
                        enumerate(get_achievable_means(1 - currentMean, maxRotations))]
         if min(meanDifs) <= min(negMeanDifs):
             return meanDifs.index(min(meanDifs))
@@ -113,8 +117,8 @@ if __name__ == "__main__":
     # ancillaQubit = "A"
     #
     # ancillaPreparation = [
-    #     {"unitary": "X", "targetQubits": [ancillaQubit]}, {"unitary": "H", "targetQubits": [ancillaQubit]}]
-    # startCircuit = [{"unitary": "H", "targetQubits": [color]} for color in distributedQubits]
+    #     {"unitary": "X", "target": [ancillaQubit]}, {"unitary": "H", "target": [ancillaQubit]}]
+    # startCircuit = [{"unitary": "H", "target": [color]} for color in distributedQubits]
     #
     # allDistPreparations = prepare_formulaList_rotations([(2, ["and", "X0", "X1"]), (1, ["not", "X0"])], startCircuit, distributedQubits)
     # circ = engine.get_circuit()(specDict={"operations": ancillaPreparation + allDistPreparations})

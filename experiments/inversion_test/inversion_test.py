@@ -4,8 +4,8 @@ from qcreason import representation, engine
 firstFormula = ["or", ["not", "A"], "B"]
 #secFormula = ["or", ["not", "A"], "B"]
 secFormula = ["imp", "A", "B"]
-hadamardOperations = [{"unitary": "H", "targetQubits": ["A"]},
-                      {"unitary": "H", "targetQubits": ["B"]}]
+hadamardOperations = [{"unitary": "H", "target": ["A"]},
+                      {"unitary": "H", "target": ["B"]}]
 operations = (hadamardOperations
               + representation.generate_formula_operations(firstFormula, headColor="Y")
               + representation.generate_formula_operations(secFormula, adjoint=True, headColor="Y")

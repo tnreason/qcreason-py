@@ -12,8 +12,8 @@ if len(binDigits) != 2 ** order:
 
 print(str(int("1110",2)))
 firstFormula = [str(int("1110",2)), "A", "B"]
-hadamardOperations = [{"unitary": "H", "targetQubits": ["A"]},
-                      {"unitary": "H", "targetQubits": ["B"]}]
+hadamardOperations = [{"unitary": "H", "target": ["A"]},
+                      {"unitary": "H", "target": ["B"]}]
 operations = (hadamardOperations
               + representation.generate_formula_operations(firstFormula, headColor="Y")
               )

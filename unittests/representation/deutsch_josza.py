@@ -24,9 +24,9 @@ class DeutschJoszaTest(unittest.TestCase):
     # self.assertTrue(ratio==1)
 
     def deutsch_josza_template(self, formula, distributedQubits, shotNum=10, headColor="Y"):
-        hadamardOperations = [{"unitary": "H", "targetQubits": [dQubit]} for dQubit in distributedQubits]
+        hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
-                      + [{"unitary": "X", "targetQubits": [headColor]}, {"unitary": "H", "targetQubits": [headColor]}]
+                      + [{"unitary": "X", "target": [headColor]}, {"unitary": "H", "target": [headColor]}]
                       + representation.generate_formula_operations(formula, headColor=headColor)
                       + hadamardOperations
                       )
