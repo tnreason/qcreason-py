@@ -1,10 +1,10 @@
-import qcreason.representation.formulas_to_circuit
-from qcreason import engine
-from qcreason import representation
+import qcreason.preparation.formulas_to_circuit
+from qcreason import simulation
+from qcreason import preparation
 
 import matplotlib.pyplot as plt
 
-circ = engine.get_circuit()(["a", "b", "c"])
+circ = simulation.get_circuit()(["a", "b", "c"])
 
 circ = qcreason.representation.formulas_to_circuit.add_formula_to_circuit(circ, ["0100", ["imp", "a", "c"], ["not", "b"]])
 

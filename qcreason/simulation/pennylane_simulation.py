@@ -3,6 +3,8 @@ import pennylane as qml
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from qcreason.simulation import helpers as hp
+
 gate_map = {"H": qml.Hadamard,
             "X": qml.PauliX,
             "Y": qml.PauliY,
@@ -11,22 +13,11 @@ gate_map = {"H": qml.Hadamard,
             "RY": qml.RY}
 
 
-def extract_qubit_colors(operationsList):
-    colors = set()
-    for op in operationsList:
-        colors.update(op.get("target", []))
-        colors.update(op.get("control", {}).keys())
-    return list(colors)
-
-
 class PennyLaneSimulator:
     def __init__(self, operations, qubit_colors=None, measured_qubits=None):
         self.operations = operations
-        self.qubit_colors = qubit_colors if qubit_colors is not None else extract_qubit_colors(self.operations)
+        self.qubit_colors = qubit_colors if qubit_colors is not None else hp.extract_qubit_colors(self.operations)
         self.measured_qubits = measured_qubits if measured_qubits is not None else self.qubit_colors
-
-    #def set_measurement(self, measured_qubits):
-    #    self.measured_qubits = measured_qubits
 
     def _build_qnode(self):
         """Build a QNode dynamically from the stored operations."""
@@ -52,7 +43,7 @@ class PennyLaneSimulator:
                     #                        qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
                     elif "angle" in op["parameters"]:
                         gate_map[op["unitary"]](op["parameters"]["angle"], wires=op["target"][0])
-                        #qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
+                        # qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
                         #         control=controls.keys())(
                         #    wires=op["target"][0])
                     else:

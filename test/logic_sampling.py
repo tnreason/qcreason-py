@@ -1,10 +1,10 @@
 
-from qcreason import engine
-from qcreason import representation
+from qcreason import simulation
+from qcreason import preparation
 
-circ = engine.get_circuit("PennyLaneCircuit")(["a", "b", "c"])
+circ = simulation.get_circuit("PennyLaneCircuit")(["a", "b", "c"])
 circ.add_hadamards(["a", "b", "c"])
-circ = representation.add_formula_to_circuit(circ, ["0100", ["imp", "a", "c"], ["not", "b"]])
+circ = preparation.add_formula_to_circuit(circ, ["0100", ["imp", "a", "c"], ["not", "b"]])
 circ.add_measurement(["b","(not_b)"])
 #circ.visualize()
 

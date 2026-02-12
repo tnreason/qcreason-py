@@ -1,6 +1,6 @@
 import unittest
 
-from qcreason import reasoning
+from qcreason import inference
 
 from tnreason import engine as tnengine
 
@@ -19,7 +19,7 @@ class ContractionTest(unittest.TestCase):
                 colors=["sledz", "blue"]
             )}
 
-        pandasCore = reasoning.QCReasonParticleContractor(coreDict=testCoreDict,
+        pandasCore = inference.QCReasonParticleContractor(coreDict=testCoreDict,
                                                           openColors=["red", "sledz"],
                                                           specDict={"shots": 10000,
                                                                     "circuitProvider": "PennyLaneSimulator",

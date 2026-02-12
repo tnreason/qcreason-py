@@ -1,6 +1,6 @@
 import qiskit as qk
 
-from qcreason import engine
+from qcreason import simulation
 
 from qiskit.circuit.library import RYGate
 
@@ -37,7 +37,7 @@ def add_rotation_slices(sliceList, headColor):
 
 if __name__ == "__main__":
 
-    circ = engine.get_circuit()(["a", "b", "c"])
+    circ = simulation.get_circuit()(["a", "b", "c"])
 
     from math import pi
 

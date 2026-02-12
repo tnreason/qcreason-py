@@ -1,12 +1,12 @@
-from qcreason import representation
-from qcreason import engine
+from qcreason import preparation
+from qcreason import simulation
 
-from qcreason.reasoning.rejection_sampling import filter_results
+from qcreason.inference.rejection_sampling import filter_results
 
 
 class HLNForwardCircuitSampler:
 
-    def __init__(self, formulaDict, canParamDict, circuitProvider=representation.standardCircuitProvider,
+    def __init__(self, formulaDict, canParamDict, circuitProvider=preparation.standardCircuitProvider,
                  amplificationNum=2, shotNum=1000):
         self.formulaDict = formulaDict
         self.canParamDict = canParamDict
@@ -16,31 +16,31 @@ class HLNForwardCircuitSampler:
         self.shotNum = shotNum
 
     def infer_meanParam(self, formulaKeys, verbose=False):
-        operations = representation.amplify_ones_state(
-            preparingOperations=representation.get_hln_ca_operations(
+        operations = preparation.amplify_ones_state(
+            preparingOperations=preparation.get_hln_ca_operations(
                 {formulaKey: self.formulaDict[formulaKey] + [self.canParamDict[formulaKey]] for formulaKey in
                  self.formulaDict}),
-            amplificationColors=["ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for
+            amplificationColors=["ancilla_" + preparation.get_formula_string(self.formulaDict[formulaKey]) for
                                  formulaKey in
                                  self.formulaDict],
             amplificationNum=self.amplificationNum
         )
-        circuit = engine.get_circuit(self.circuitProvider)(
+        circuit = simulation.get_circuit(self.circuitProvider)(
             operations=operations,
-            measured_qubits=[representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
+            measured_qubits=[preparation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
                              formulaKeys] +
-                            ["ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey
+                            ["ancilla_" + preparation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey
                              in self.formulaDict])
         #circuit.add_measurement(
         #)  # ! Need to measure all ancilla, not only those infered
         samples = filter_results(circuit.run(shots=self.shotNum), ancillaColors=[
-            "ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
+            "ancilla_" + preparation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
             self.formulaDict])
 
         if verbose:
             print("Out of {} shots, {} samples have been accepted.".format(self.shotNum, len(samples)))
 
-        return {formulaKey: samples[representation.get_formula_string(self.formulaDict[formulaKey])].mean() for
+        return {formulaKey: samples[preparation.get_formula_string(self.formulaDict[formulaKey])].mean() for
                 formulaKey in formulaKeys}
 
     # def old_infer_meanParam(self, formulaKeys, verbose=False):

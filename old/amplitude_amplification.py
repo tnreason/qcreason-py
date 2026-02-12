@@ -1,4 +1,4 @@
-from qcreason import engine, representation
+from qcreason import simulation, preparation
 import  matplotlib.pyplot as plt
 
 circuitProvider =  "PennyLaneCircuit"
@@ -16,9 +16,9 @@ def acceptanceRate(results):
 amplificationNumbers = range(20)
 acceptanceRates = []
 for amiplitNum in amplificationNumbers:
-    circ = engine.get_circuit(circuitProvider)(disVariables)
-    circ = representation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
-    circ = representation.amplify(circ, weightedFormulas, amiplitNum, atomColors=disVariables)
+    circ = simulation.get_circuit(circuitProvider)(disVariables)
+    circ = preparation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
+    circ = preparation.amplify(circ, weightedFormulas, amiplitNum, atomColors=disVariables)
     circ.add_measurement(disVariables + ["samplingAncilla"])
     #circ.visualize()
     shotNum = 10000

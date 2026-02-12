@@ -1,4 +1,4 @@
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 
 ## Inversion Test
 firstFormula = ["or", ["not", "A"], "B"]
@@ -7,11 +7,11 @@ secFormula = ["imp", "A", "B"]
 hadamardOperations = [{"unitary": "H", "target": ["A"]},
                       {"unitary": "H", "target": ["B"]}]
 operations = (hadamardOperations
-              + representation.generate_formula_operations(firstFormula, headColor="Y")
-              + representation.generate_formula_operations(secFormula, adjoint=True, headColor="Y")
+              + preparation.generate_formula_operations(firstFormula, headColor="Y")
+              + preparation.generate_formula_operations(secFormula, adjoint=True, headColor="Y")
               + hadamardOperations
               )
 
-circuit = engine.get_circuit()(specDict={"operations": operations})
+circuit = simulation.get_circuit()(specDict={"operations": operations})
 circuit.visualize()
 print(circuit.run(10))

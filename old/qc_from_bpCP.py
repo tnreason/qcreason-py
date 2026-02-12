@@ -1,6 +1,6 @@
 import qiskit as qk
 
-from qcreason.representation import get_formula_string, get_bpCP
+from qcreason.preparation import get_formula_string, get_bpCP
 
 
 def formula_to_circuits(qc, qubitDict, formula):

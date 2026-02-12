@@ -1,16 +1,16 @@
 import math
 import unittest
 
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 
 CIRCUIT_PROVIDER = "PennyLaneSimulator"
 
 
 class PreparationTest(unittest.TestCase):
     def test_statistic_preparation_amplification_free(self):
-        operations = representation.get_hadamard_gates(["a", "b", "c"]) + representation.generate_formula_operations(
+        operations = preparation.get_hadamard_gates(["a", "b", "c"]) + preparation.generate_formula_operations(
             ["and", ["imp", "b", "c"], ["not", "a"]])
-        circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
+        circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
         samples = circ.run(shots=100)
         for idx, row in samples.iterrows():
             self.assertTrue(row["(not_a)"] ^ row["a"])
@@ -20,11 +20,11 @@ class PreparationTest(unittest.TestCase):
     def test_statistic_preparation_with_amplification(self):
         weightedFormulaDict = {"f1": ["and", ["imp", "b", "c"], ["not", "a"], True]}
         for amplificationNum in [0, 1, 5]:
-            operations = representation.amplify_ones_state(
-                representation.get_hln_ca_operations(weightedFormulaDict),
+            operations = preparation.amplify_ones_state(
+                preparation.get_hln_ca_operations(weightedFormulaDict),
                 amplificationColors=["ancilla_(and_(imp_b_c)_(not_a))"], amplificationNum=amplificationNum
             )
-            circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
+            circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
             samples = circ.run(shots=10)
             for idx, row in samples.iterrows():
                 self.assertTrue(row["(not_a)"] ^ row["a"])
@@ -37,13 +37,13 @@ class PreparationTest(unittest.TestCase):
             "f2": ["and", "jaszczur", "kaczka", False],
             "f3": ["or", "sledz", "kaczka", -1]
         }
-        operations = representation.amplify_ones_state(
-            representation.get_hln_ca_operations(weightedFormulas),
+        operations = preparation.amplify_ones_state(
+            preparation.get_hln_ca_operations(weightedFormulas),
             amplificationColors=["ancilla_(and_(imp_b_c)_(not_a))"], amplificationNum=0
         )
         ancillaVariables = ['ancilla_(or_sledz_kaczka)', 'ancilla_(imp_sledz_jaszczur)',
                             'ancilla_(and_jaszczur_kaczka)']
-        circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations=operations,
+        circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations,
                                                         measured_qubits=["(imp_sledz_jaszczur)",
                                                                          "(and_jaszczur_kaczka)"] + ancillaVariables)
 
@@ -69,11 +69,11 @@ class PreparationTest(unittest.TestCase):
         1 & 1
         1 & exp[canParam]
         """
-        operations = representation.amplify_ones_state(
-            representation.get_hln_ca_operations(weightedFormulas),
+        operations = preparation.amplify_ones_state(
+            preparation.get_hln_ca_operations(weightedFormulas),
             amplificationColors=["ancilla_(and_sledz_kaczka)"],
             amplificationNum=amplificationNum)
-        circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations=operations,
+        circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations,
                                                         measured_qubits=["(and_sledz_kaczka)",
                                                                          "ancilla_(and_sledz_kaczka)"])
         samples = circ.run(shots=shotNum)
@@ -97,11 +97,11 @@ class PreparationTest(unittest.TestCase):
         exp[canParam] & 1
         exp[canParam] & exp[canParam]
         """
-        operations = representation.amplify_ones_state(
-            representation.get_hln_ca_operations(weightedFormulas),
+        operations = preparation.amplify_ones_state(
+            preparation.get_hln_ca_operations(weightedFormulas),
             amplificationColors=["ancilla_(and_sledz_kaczka)", "ancilla_(not_sledz)"],
             amplificationNum=amplificationNum)
-        circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations=operations, measured_qubits=["(and_sledz_kaczka)",
+        circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations, measured_qubits=["(and_sledz_kaczka)",
                                                                                                 "ancilla_(and_sledz_kaczka)",
                                                                                                 "ancilla_(not_sledz)"])
         samples = circ.run(shots=shotNum)
@@ -113,9 +113,9 @@ class PreparationTest(unittest.TestCase):
         self.assertTrue(abs(formulaTrue / accepted - (math.e) ** canParam / (1 + 3 * (math.e) ** canParam)) < tolerance)
 
     def test_wolfram_codes(self):
-        operations = representation.get_hadamard_gates(["a", "b", "c"]) + representation.generate_formula_operations(
+        operations = preparation.get_hadamard_gates(["a", "b", "c"]) + preparation.generate_formula_operations(
             ["8", ["11", "a", "c"], ["1", "b"]])
-        circ = engine.get_circuit(CIRCUIT_PROVIDER)(operations = operations)
+        circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations = operations)
         shotNum = 10
         results = circ.run(shots=shotNum)
         for idx, row in results.iterrows():

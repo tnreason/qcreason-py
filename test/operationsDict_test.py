@@ -1,6 +1,6 @@
-from qcreason.representation import m2bp_formulas as mf
-from qcreason.representation import computation_activation_circuit as cac
-from qcreason.representation import operations_transform as ot
+from qcreason.preparation import m2bp_formulas as mf
+from qcreason.preparation import computation_activation_circuit as cac
+from qcreason.preparation import operations_transform as ot
 import json
 
 ops = cac.get_hln_ca_operations(

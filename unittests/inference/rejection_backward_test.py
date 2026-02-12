@@ -1,6 +1,6 @@
 import unittest
 
-from qcreason import reasoning
+from qcreason import inference
 
 
 class RejectionBackwardTest(unittest.TestCase):
@@ -17,11 +17,11 @@ class RejectionBackwardTest(unittest.TestCase):
             "f3": 0.5
         }
 
-        backwardInferer = reasoning.HLNBackwardCircuitAlternator(formulaDict, targetMeanDict=satisfactionDict,
+        backwardInferer = inference.HLNBackwardCircuitAlternator(formulaDict, targetMeanDict=satisfactionDict,
                                                                  shotNum=1000, amplificationNum=2)
         backwardInferer.alternate(10)
 
-        testInferer = reasoning.HLNForwardCircuitSampler(formulaDict, backwardInferer.canParamDict, shotNum=10000,
+        testInferer = inference.HLNForwardCircuitSampler(formulaDict, backwardInferer.canParamDict, shotNum=10000,
                                                          amplificationNum=2)
         matchedDict = testInferer.infer_meanParam(["f1", "f2", "f3"])
 

@@ -1,6 +1,6 @@
 
-from qcreason import engine
-from qcreason import representation
+from qcreason import simulation
+from qcreason import preparation
 
 circuitProvider = "PennyLaneCircuit" # "QiskitCircuit"
 
@@ -11,8 +11,8 @@ weightedFormulas = {
     "f3": ["or", "sledz", "kaczka", -1]
 }
 
-circ = engine.get_circuit(circuitProvider)(disVariables)
-circ = representation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
+circ = simulation.get_circuit(circuitProvider)(disVariables)
+circ = preparation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
 #circ = representation.amplify(circ, weightedFormulas, 0, atomColors=disVariables)
 circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"] + ["samplingAncilla"])
 #circ.visualize()

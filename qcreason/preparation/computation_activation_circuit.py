@@ -1,7 +1,7 @@
-from qcreason.representation import m2bp_formulas as mf
-from qcreason.representation import activation_circuits as ac
-from qcreason.representation import logic_encoding as le
-from qcreason.representation import operations_transform as ot
+from qcreason.preparation import m2bp_formulas as mf
+from qcreason.preparation import activation_circuits as ac
+from qcreason.preparation import logic_encoding as le
+from qcreason.preparation import operations_transform as ot
 
 def get_hln_ca_operations(weightedFormulaDict, ancillaPrefix="ancilla_"):
     """

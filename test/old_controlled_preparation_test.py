@@ -1,6 +1,6 @@
 import unittest
 
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 
 circuitProvider = "PennyLaneCircuit"
 
@@ -8,8 +8,8 @@ circuitProvider = "PennyLaneCircuit"
 class PreparationTest(unittest.TestCase):
     def test_statistic_preparation_amplification_free(self):
 
-        circ = engine.get_circuit(circuitProvider)(["a", "b", "c"])
-        circ = representation.add_formula_to_circuit(circ, ["and", ["imp", "b", "c"], ["not", "a"]])
+        circ = simulation.get_circuit(circuitProvider)(["a", "b", "c"])
+        circ = preparation.add_formula_to_circuit(circ, ["and", ["imp", "b", "c"], ["not", "a"]])
         circ.add_measurement(["a", "b", "c", "(not_a)", "(imp_b_c)", "(and_(imp_b_c)_(not_a))"])
 
         samples = circ.run(shots=100)
@@ -21,13 +21,13 @@ class PreparationTest(unittest.TestCase):
 
     def test_statistic_preparation_with_amplification(self):
         weightedFormulaDict = {"f1": ["and", ["imp", "b", "c"], ["not", "a"], True]}
-        circ = engine.get_circuit(circuitProvider)(["a", "b", "c"])
-        circ = representation.compute_and_activate(
+        circ = simulation.get_circuit(circuitProvider)(["a", "b", "c"])
+        circ = preparation.compute_and_activate(
             circ, weightedFormulaDict, atomColors=["a", "b", "c"]
         )
         for amplificationNum in [0, 1, 5]:
-            circ = representation.amplify(circ, weightedFormulaDict, amplificationNum=amplificationNum,
-                                          atomColors=["a", "b", "c"])
+            circ = preparation.amplify(circ, weightedFormulaDict, amplificationNum=amplificationNum,
+                                       atomColors=["a", "b", "c"])
             circ.add_measurement(["a", "b", "c", "(not_a)", "(imp_b_c)", "(and_(imp_b_c)_(not_a))", "samplingAncilla"])
             samples = circ.run(shots=10)
             for idx, row in samples.iterrows():
@@ -44,8 +44,8 @@ class PreparationTest(unittest.TestCase):
             "f3": ["or", "sledz", "kaczka", -1]
         }
 
-        circ = engine.get_circuit(circuitProvider)(disVariables)
-        circ = representation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
+        circ = simulation.get_circuit(circuitProvider)(disVariables)
+        circ = preparation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
         circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"] + ["samplingAncilla"])
 
         shotNum = 100
@@ -56,9 +56,9 @@ class PreparationTest(unittest.TestCase):
             self.assertTrue(not row["samplingAncilla"] or not row["(and_jaszczur_kaczka)"])
 
     def test_wolfram_codes(self):
-        circ = engine.get_circuit("PennyLaneCircuit")(["a", "b", "c"])
+        circ = simulation.get_circuit("PennyLaneCircuit")(["a", "b", "c"])
         circ.add_hadamards(["a", "b", "c"])
-        circ = representation.add_formula_to_circuit(circ, ["8", ["11", "a", "c"], ["1", "b"]])
+        circ = preparation.add_formula_to_circuit(circ, ["8", ["11", "a", "c"], ["1", "b"]])
         circ.add_measurement(["a", "b", "c", "(1_b)", "(11_a_c)", "(8_(11_a_c)_(1_b))"])
 
         # Run the circuit

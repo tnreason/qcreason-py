@@ -1,6 +1,6 @@
-from qcreason import representation, engine, reasoning
+from qcreason import preparation, simulation, inference
 
-from qcreason.reasoning import backward_inference as bi
+from qcreason.inference import backward_inference as bi
 
 formulaDict = {
     "f1" : ["imp", "a", "b"],

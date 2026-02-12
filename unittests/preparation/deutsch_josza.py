@@ -1,6 +1,6 @@
 import unittest
 
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 
 
 class DeutschJoszaTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class DeutschJoszaTest(unittest.TestCase):
         self.assertTrue(1 == self.deutsch_josza_template(formula=["0", "sledz", "jaszczur"],
                                                          distributedQubits=["sledz", "jaszczur"]))
 
-    ## Does the auxiliary variable "(not_sledz)" manipulate the algorithm?
+    ## Does the auxiliary variable "(not_sledz)" manipulate the algorithm? -> Would need to be uncomputed!
     # def test_satisfiable(self):
     #    ratio = self.deutsch_josza_template(formula=["and", "sledz", ["not", "sledz"]], distributedQubits=["sledz"],
     #                                        shotNum=100)
@@ -27,10 +27,10 @@ class DeutschJoszaTest(unittest.TestCase):
         hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
                       + [{"unitary": "X", "target": [headColor]}, {"unitary": "H", "target": [headColor]}]
-                      + representation.generate_formula_operations(formula, headColor=headColor)
+                      + preparation.generate_formula_operations(formula, headColor=headColor)
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations, measured_qubits=distributedQubits)
+        circuit = simulation.get_circuit("PennyLaneSimulator")(operations=operations, measured_qubits=distributedQubits)
         samples = circuit.run(shotNum)
         return sum(
             [1 for i, row in samples.iterrows() if all([row[dQubit] == 0 for dQubit in distributedQubits])]) / shotNum

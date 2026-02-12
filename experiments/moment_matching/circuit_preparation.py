@@ -1,4 +1,4 @@
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 import math
 
 
@@ -35,9 +35,9 @@ def get_prep_f_grover(prepOps, formula, distributedQubits, ancillaQubit):
     :param ancillaQubit:
     :return:
     """
-    return representation.generate_formula_operations(formula, headColor=ancillaQubit) + filter_headOperations(
-        representation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
-        headColor=ancillaQubit) + prepOps[::-1] + representation.get_groundstate_reflexion_operations(
+    return preparation.generate_formula_operations(formula, headColor=ancillaQubit) + filter_headOperations(
+        preparation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
+        headColor=ancillaQubit) + prepOps[::-1] + preparation.get_groundstate_reflexion_operations(
         distributedQubits) + prepOps
 
 
@@ -91,8 +91,8 @@ def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=No
 
 
 if __name__ == "__main__":
-    testOperations = representation.generate_formula_operations(["or", ["and", "sledz", "jaszczur"], ["not", "slimak"]],
-                                                                headColor="Ancilla")
+    testOperations = preparation.generate_formula_operations(["or", ["and", "sledz", "jaszczur"], ["not", "slimak"]],
+                                                             headColor="Ancilla")
     assert len(filter_headOperations(testOperations, "Ancilla")) == len(testOperations) - 2
 
     # Check overrotation prevention

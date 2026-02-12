@@ -1,7 +1,7 @@
-from qcreason import representation
-from qcreason import engine
+from qcreason import preparation
+from qcreason import simulation
 
-from qcreason.reasoning import rejection_sampling as rs
+from qcreason.inference import rejection_sampling as rs
 
 from tnreason import engine as tnengine
 
@@ -18,27 +18,30 @@ class QCReasonParticleContractor:
         self.specDict = specDict
 
     def contract(self):
-        operations = representation.amplify_ones_state(
-            preparingOperations=representation.tn_to_circuit(self.coreDict, ancillaPrefix="ancilla_"),
+        operations = preparation.amplify_ones_state(
+            preparingOperations=preparation.tn_to_circuit(self.coreDict, ancillaPrefix="ancilla_"),
             amplificationColors=["ancilla_" + coreKey for coreKey in self.coreDict],
             amplificationNum=self.specDict.get("amplificationNum", 0))
-        circuit = engine.get_circuit(
-            self.specDict.get("circuitProvider", representation.standardCircuitProvider))(operations=operations,
-                                                                                          measured_qubits=self.openColors + [
+        circuit = simulation.get_circuit(
+            self.specDict.get("circuitProvider", preparation.standardCircuitProvider))(operations=operations,
+                                                                                       measured_qubits=self.openColors + [
                                                                                               "ancilla_" + coreKey for
                                                                                               coreKey in self.coreDict])
-        #circuit.add_measurement()
         filteredResults = rs.filter_results(circuit.run(shots=self.specDict.get("shots", 1000)),
                                             ancillaColors=["ancilla_" + coreKey for coreKey in self.coreDict],
                                             keepColors=self.openColors)
         return tnengine.get_core("PandasCore")(colors=self.openColors,
-                                               shape=[get_shape_dict(self.coreDict)[color] for color in
+                                               shape=[get_and_check_shape_dict(self.coreDict)[color] for color in
                                                       self.openColors],
                                                values=filteredResults)
 
 
-def get_shape_dict(coreDict):
-    # ! So far only working for leg dimension 2
+def get_and_check_shape_dict(coreDict):
+    """
+    Extracts the colors and checks whether all leg dimensions are 2
+    :param coreDict: tnreason tensor network, i.e. a dictionary of tensor cores
+    :return: shapes
+    """
     shapeDict = {}
     for coreKey in coreDict:
         for color, dim in zip(coreDict[coreKey].colors, coreDict[coreKey].values.shape):

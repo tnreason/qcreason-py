@@ -1,4 +1,4 @@
-from qcreason import engine
+from qcreason import simulation
 
 
 def get_adjoint_circuit(operationsList):
@@ -64,6 +64,6 @@ def amplify_ones_state(preparingOperations, amplificationColors, amplificationNu
         ops += [{"unitary": "MCZ", "target": [amplificationColors[-1]],
                  "control": {color: 1 for color in amplificationColors[:-1]}}]
         ops += get_adjoint_circuit(preparingOperations)
-        ops += get_groundstate_reflexion_operations(engine.extract_qubit_colors(preparingOperations))
+        ops += get_groundstate_reflexion_operations(simulation.extract_qubit_colors(preparingOperations))
         ops += preparingOperations
     return ops

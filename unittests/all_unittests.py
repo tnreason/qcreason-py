@@ -1,11 +1,11 @@
 import unittest
 
-from reasoning.rejection_forward_test import RejectionForwardTest
-from reasoning.rejection_backward_test import RejectionBackwardTest
-from reasoning.contraction_test import ContractionTest
+from inference.rejection_forward_test import RejectionForwardTest
+from inference.rejection_backward_test import RejectionBackwardTest
+from inference.contraction_test import ContractionTest
 
-from representation.formula_qubit_preparation import PreparationTest
-from representation.inversion_test import InversionTest
-from representation.deutsch_josza import DeutschJoszaTest
+from preparation.formula_qubit_preparation import PreparationTest
+from preparation.inversion_test import InversionTest
+from preparation.deutsch_josza import DeutschJoszaTest
 
 unittest.main()

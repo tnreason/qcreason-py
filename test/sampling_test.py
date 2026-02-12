@@ -1,13 +1,13 @@
-from qcreason import engine
-from qcreason import representation
-from qcreason import reasoning
+from qcreason import simulation
+from qcreason import preparation
+from qcreason import inference
 
 import math
 
 circuitProvider = "PennyLaneCircuit" # "QiskitCircuit"
 
 disVariables = ["sledz", "jaszczur", "kaczka", "jaskuka"]
-circ = engine.get_circuit(circuitProvider)(disVariables)
+circ = simulation.get_circuit(circuitProvider)(disVariables)
 circ.add_hadamards(disVariables)
 
 weightedFormulas = {
@@ -18,9 +18,9 @@ weightedFormulas = {
 }
 
 for formulaKey in weightedFormulas:
-    circ = representation.add_formula_to_circuit(circ, weightedFormulas[formulaKey][:-1])
+    circ = preparation.add_formula_to_circuit(circ, weightedFormulas[formulaKey][:-1])
 
-sliceTuples = representation.calculate_angles(representation.get_color_param_dict(weightedFormulas))
+sliceTuples = preparation.calculate_angles(preparation.get_color_param_dict(weightedFormulas))
 
 headColor = "samplingAncilla"
 
@@ -29,7 +29,7 @@ for sliceTuple in sliceTuples:
 
 shotNum = 1000
 circ.add_measurement(disVariables + [headColor])
-filtered = reasoning.filter_results(circ.run(shotNum)).values
+filtered = inference.filter_results(circ.run(shotNum)).values
 
 jaskukaTrueCount = len([res for res in filtered if res[3]==1])
 

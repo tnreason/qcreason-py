@@ -1,4 +1,4 @@
-from qcreason import representation, engine, reasoning
+from qcreason import preparation, simulation, inference
 
 import math
 
@@ -11,7 +11,7 @@ weightedFormulas = {
     "f3": ["or", "sledz", "kaczka", -1]
 }
 
-inferer = reasoning.HLNForwardCircuitSampler(
+inferer = inference.HLNForwardCircuitSampler(
     formulaDict={formulaKey: weightedFormulas[formulaKey][:-1] for formulaKey in weightedFormulas},
     canParamDict={formulaKey: weightedFormulas[formulaKey][-1] for formulaKey in weightedFormulas},
     circuitProvider=circuitProvider, amplificationNum=2, shotNum=1000)

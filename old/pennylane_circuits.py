@@ -3,7 +3,7 @@ import pennylane as qml
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from qcreason.engine import helpers as hp
+from qcreason.simulation import helpers as hp
 
 def get_operation_from_unitaryDict(unitaryDict):
     if unitaryDict["unitary"] == "H":

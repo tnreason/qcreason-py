@@ -1,6 +1,6 @@
 import math
 from experiments.moment_matching import circuit_preparation as cp
-from qcreason import representation as qcrep
+from qcreason import preparation as qcrep
 
 PHASE_PREFIX = "P"
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         print(op)
 
     ## NEW CIRCUIT SIMULATION EXAMPLE
-    from qcreason.engine import pennylane_simulation as ps
+    from qcreason.simulation import pennylane_simulation as ps
 
     simulation = ps.PennyLaneSimulator(ops, measured_qubits=[PHASE_PREFIX+f"_{j}" for j in range(precision)])
 #    simulation.visualize()

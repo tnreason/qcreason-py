@@ -1,4 +1,4 @@
-from qcreason import representation, engine, reasoning
+from qcreason import preparation, simulation, inference
 
 import math
 
@@ -11,19 +11,19 @@ weightedFormulas = {
     "f3": ["or", "sledz", "kaczka", -1]
 }
 
-circ = engine.get_circuit(circuitProvider)(disVariables)
-circ = representation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
-circ = representation.amplify(circ, weightedFormulas, 1, atomColors=disVariables)
+circ = simulation.get_circuit(circuitProvider)(disVariables)
+circ = preparation.compute_and_activate(circ, weightedFormulas, atomColors=disVariables)
+circ = preparation.amplify(circ, weightedFormulas, 1, atomColors=disVariables)
 circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"] + ["samplingAncilla"])
 #circ.visualize()
 
 shotNum = 1000
 results = circ.run(shots=shotNum)
-results = reasoning.filter_results(results)
+results = inference.filter_results(results)
 #df = pd.DataFrame(results,
 #                  columns=disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"])
 
-empSat = reasoning.compute_satisfaction(results, weightedFormulas)
+empSat = inference.compute_satisfaction(results, weightedFormulas)
 print("Empirical mean parameters are: {}".format(empSat))
 
 

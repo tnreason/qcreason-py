@@ -1,6 +1,6 @@
 import unittest
 
-from qcreason import representation, engine
+from qcreason import preparation, simulation
 
 
 class InversionTest(unittest.TestCase):
@@ -24,12 +24,12 @@ class InversionTest(unittest.TestCase):
         distributedQubits = ["A", "B"]
         hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
-                      + representation.generate_formula_operations(formula1, headColor="Y")
-                      + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
-                      + representation.generate_formula_operations(["not", "A"], adjoint=True)
+                      + preparation.generate_formula_operations(formula1, headColor="Y")
+                      + preparation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
+                      + preparation.generate_formula_operations(["not", "A"], adjoint=True)
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations)
+        circuit = simulation.get_circuit("PennyLaneSimulator")(operations=operations)
         samples = circuit.run(10)
         for i, row in samples.iterrows():
             self.assertTrue(all([row[dQubit] == 0 for dQubit in distributedQubits]))
@@ -40,11 +40,11 @@ class InversionTest(unittest.TestCase):
     def syntactically_equal_template(self, formula1, formula2, distributedQubits, shotNum=10):
         hadamardOperations = [{"unitary": "H", "target": [dQubit]} for dQubit in distributedQubits]
         operations = (hadamardOperations
-                      + representation.generate_formula_operations(formula1, headColor="Y")
-                      + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
+                      + preparation.generate_formula_operations(formula1, headColor="Y")
+                      + preparation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations)
+        circuit = simulation.get_circuit("PennyLaneSimulator")(operations=operations)
         samples = circuit.run(shotNum)
         for i, row in samples.iterrows():
             self.assertTrue(all([row[dQubit] == 0 for dQubit in distributedQubits]))

@@ -1,4 +1,4 @@
-from qcreason.reasoning import generic_contraction as gc
+from qcreason.inference import generic_contraction as gc
 
 from tnreason import engine as tnengine
 

@@ -1,4 +1,4 @@
-from qcreason.representation import m2bp_formulas as mf
+from qcreason.preparation import m2bp_formulas as mf
 
 import numpy as np
 

@@ -1,4 +1,4 @@
-from qcreason import engine as qcengine
+from qcreason import simulation
 
 from tnreason import representation as tnrepresentation
 from tnreason import engine as tnengine
@@ -46,8 +46,7 @@ class QuantumMomentMatcher:
         """
         if formulaKeys is None:
             formulaKeys = list(self.expressionsDict.keys())
-        testCircuit = qcengine.get_circuit()(
-            specDict={"operations": get_ancillaPreparationCircuit() + self.circuitOperations})
+        testCircuit = simulation.get_circuit()(operations=get_ancillaPreparationCircuit() + self.circuitOperations)
         sampleDf = testCircuit.run(shotNum)
         return {expressionKey: calculate_satisfaction(sampleDf, self.expressionsDict[expressionKey]) for expressionKey
                 in formulaKeys}
