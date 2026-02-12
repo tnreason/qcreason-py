@@ -12,7 +12,7 @@ class PreparationTest(unittest.TestCase):
         circ = preparation.add_formula_to_circuit(circ, ["and", ["imp", "b", "c"], ["not", "a"]])
         circ.add_measurement(["a", "b", "c", "(not_a)", "(imp_b_c)", "(and_(imp_b_c)_(not_a))"])
 
-        samples = circ.run(shots=100)
+        samples = circ.run(shotNum=100)
 
         for idx, row in samples.iterrows():
             self.assertTrue(row["(not_a)"] ^ row["a"])
@@ -29,7 +29,7 @@ class PreparationTest(unittest.TestCase):
             circ = preparation.amplify(circ, weightedFormulaDict, amplificationNum=amplificationNum,
                                        atomColors=["a", "b", "c"])
             circ.add_measurement(["a", "b", "c", "(not_a)", "(imp_b_c)", "(and_(imp_b_c)_(not_a))", "samplingAncilla"])
-            samples = circ.run(shots=10)
+            samples = circ.run(shotNum=10)
             for idx, row in samples.iterrows():
                 self.assertTrue(row["(not_a)"] ^ row["a"])
                 self.assertTrue(row["(imp_b_c)"] == (not row["b"] or row["c"]))
@@ -49,7 +49,7 @@ class PreparationTest(unittest.TestCase):
         circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"] + ["samplingAncilla"])
 
         shotNum = 100
-        samples = circ.run(shots=shotNum)
+        samples = circ.run(shotNum=shotNum)
 
         for idx, row in samples.iterrows():
             self.assertTrue(not row["samplingAncilla"] or row["(imp_sledz_jaszczur)"])
@@ -63,7 +63,7 @@ class PreparationTest(unittest.TestCase):
 
         # Run the circuit
         shotNum = 10
-        results = circ.run(shots=shotNum)
+        results = circ.run(shotNum=shotNum)
         for idx, row in results.iterrows():
             self.assertTrue(row["b"] == (not row["(1_b)"]))  # 1 is not
             self.assertTrue(row["(11_a_c)"] == (not row["a"] or row["c"]))  # 11 is imp

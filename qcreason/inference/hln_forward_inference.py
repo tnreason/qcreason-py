@@ -33,7 +33,7 @@ class HLNForwardCircuitSampler:
                              in self.formulaDict])
         #circuit.add_measurement(
         #)  # ! Need to measure all ancilla, not only those infered
-        samples = filter_results(circuit.run(shots=self.shotNum), ancillaColors=[
+        samples = filter_results(circuit.run(shotNum=self.shotNum), ancillaColors=[
             "ancilla_" + preparation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
             self.formulaDict])
 

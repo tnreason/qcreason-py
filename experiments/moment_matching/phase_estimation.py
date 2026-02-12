@@ -90,5 +90,11 @@ if __name__ == "__main__":
     from qcreason.simulation import pennylane_simulation as ps
 
     simulation = ps.PennyLaneSimulator(ops, measured_qubits=[PHASE_PREFIX+f"_{j}" for j in range(precision)])
-#    simulation.visualize()
+
+    simulation.get_decomposed_circuit()
+    print(simulation.estimate_resources(transform=False))
+    simulation.visualize()
+    print("####")
+    print(simulation.estimate_resources(transform=True))
+#
     print(simulation.run(10))

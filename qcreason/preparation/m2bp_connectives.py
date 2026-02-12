@@ -63,5 +63,5 @@ def get_connective_operations(connectiveKey, inColors, outColor):
     :return:
     """
     basPlusCP = get_bpCP_connective(connectiveKey, inColors)
-    return [{"unitary": "MCX", "target": [outColor], "control": controlDict} for controlDict
+    return [{"unitary": "X", "target": [outColor], "control": controlDict} for controlDict
             in basPlusCP]

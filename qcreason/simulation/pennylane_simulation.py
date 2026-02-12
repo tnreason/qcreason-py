@@ -5,12 +5,13 @@ import pandas as pd
 
 from qcreason.simulation import helpers as hp
 
-gate_map = {"H": qml.Hadamard,
+GATE_MAP = {"H": qml.Hadamard,
             "X": qml.PauliX,
             "Y": qml.PauliY,
             "Z": qml.PauliZ,
             "RZ": qml.RZ,
             "RY": qml.RY}
+STANDARD_GATES = {qml.CNOT, qml.PauliX, qml.PauliY, qml.RZ, qml.RY, qml.RZ, qml.H}
 
 
 class PennyLaneSimulator:
@@ -32,28 +33,22 @@ class PennyLaneSimulator:
                 for zQ in zeroControls:
                     qml.PauliX(wires=zQ)
 
-                if op["unitary"].startswith("MC"):  ## Only to handle the old unitary names
-                    op["unitary"] = op["unitary"][2:]
-
                 if len(controls) == 0:
-
+                    # Control free gates
                     if not "parameters" in op or len(
                             op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
-                        gate_map[op["unitary"]](wires=op["target"][0])
-                    #                        qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
+                        GATE_MAP[op["unitary"]](wires=op["target"][0])
                     elif "angle" in op["parameters"]:
-                        gate_map[op["unitary"]](op["parameters"]["angle"], wires=op["target"][0])
-                        # qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
-                        #         control=controls.keys())(
-                        #    wires=op["target"][0])
+                        GATE_MAP[op["unitary"]](op["parameters"]["angle"], wires=op["target"][0])
                     else:
                         raise ValueError(f"Unitary {op} not understood!")
                 else:
+                    # Control free gates, need qml.ctrl
                     if not "parameters" in op or len(
                             op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
-                        qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
+                        qml.ctrl(GATE_MAP[op["unitary"]], control=controls.keys())(wires=op["target"][0])
                     elif "angle" in op["parameters"]:
-                        qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
+                        qml.ctrl(lambda wires: GATE_MAP[op["unitary"]](op["parameters"]["angle"], wires=wires),
                                  control=controls.keys())(
                             wires=op["target"][0])
                     else:
@@ -78,8 +73,38 @@ class PennyLaneSimulator:
         fig, ax = qml.draw_mpl(circuit)()
         plt.show()
 
-    def run(self, shots=1024):
-        """Execute the circuit and return measurement results."""
+    def get_decomposed_circuit(self, gate_set=None):
+        if gate_set is None:
+            gate_set = STANDARD_GATES
         circuit = self._build_qnode()
-        samples = circuit(shots=shots)
+        return qml.transforms.decompose(circuit, gate_set=gate_set)
+
+    def estimate_resources(self, transform=False, allowed_gate_set=None):
+        if transform:
+            if allowed_gate_set is None:
+                allowed_gate_set = STANDARD_GATES
+            circuit = self.get_decomposed_circuit(gate_set=allowed_gate_set)
+        else:
+            circuit = self._build_qnode()
+
+        # 2. Get the specs (qml.specs returns a function)
+        # Since circuit() takes no args, we call specs(circuit)()
+        specs_data = qml.specs(circuit)()
+
+        # 3. Extract the 'resources' key for the most relevant info
+        return specs_data["resources"]
+
+    def run(self, shotNum=1024, transform=False, allowed_gate_set=None):
+        """
+        Builds a circuit, sets the shot number, and computes shots many samples
+        :param shotNum:
+        :return: pd.DataFrame of the samples
+        """
+        if transform:
+            if allowed_gate_set is None:
+                allowed_gate_set = {qml.CNOT, qml.PauliX, qml.PauliY, qml.RZ, qml.RY, qml.RZ, qml.H}
+            circuit = self.get_decomposed_circuit(gate_set=allowed_gate_set)
+        else:
+            circuit = self._build_qnode()
+        samples = qml.set_shots(circuit, shots=shotNum)()
         return pd.DataFrame(samples, columns=self.measured_qubits)

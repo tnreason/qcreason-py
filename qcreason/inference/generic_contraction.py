@@ -27,7 +27,7 @@ class QCReasonParticleContractor:
                                                                                        measured_qubits=self.openColors + [
                                                                                               "ancilla_" + coreKey for
                                                                                               coreKey in self.coreDict])
-        filteredResults = rs.filter_results(circuit.run(shots=self.specDict.get("shots", 1000)),
+        filteredResults = rs.filter_results(circuit.run(shotNum=self.specDict.get("shots", 1000)),
                                             ancillaColors=["ancilla_" + coreKey for coreKey in self.coreDict],
                                             keepColors=self.openColors)
         return tnengine.get_core("PandasCore")(colors=self.openColors,

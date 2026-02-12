@@ -21,10 +21,10 @@ def single_canParam_to_activation_circuit(canParam, statisticColor, ancillaColor
     """
 
     if isinstance(canParam, bool):
-        return [{"unitary": "MCX", "target": [ancillaColor], "control": {statisticColor: int(canParam)}}]
+        return [{"unitary": "X", "target": [ancillaColor], "control": {statisticColor: int(canParam)}}]
     else:
         maxValue = np.exp(max(0, canParam))
-        return [{"unitary": "MCRY", "target": [ancillaColor], "control": {statisticColor: val},
+        return [{"unitary": "RY", "target": [ancillaColor], "control": {statisticColor: val},
                  "parameters": {"angle": probability_to_angle(np.exp(val * canParam) / maxValue)}} for val in
                 interpretationList]
 
@@ -36,7 +36,7 @@ def activation_core_to_circuit(actCore, maxValue, ancillaColor="ancilla"):
     :param maxValue: maximum value (or upper bound) for the coefficients)
     :return:
     """
-    return [{"unitary": "MCRY", "target": [ancillaColor],
+    return [{"unitary": "RY", "target": [ancillaColor],
              "control": {color: idx[i] for i, color in enumerate(actCore.colors)},
              "parameters": {"angle": probability_to_angle(
                  actCore[{color: idx[i] for i, color in enumerate(actCore.colors)}] / maxValue)}} for idx in

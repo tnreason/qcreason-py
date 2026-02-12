@@ -22,7 +22,7 @@ for amiplitNum in amplificationNumbers:
     circ.add_measurement(disVariables + ["samplingAncilla"])
     #circ.visualize()
     shotNum = 10000
-    results = circ.run(shots=shotNum)
+    results = circ.run(shotNum=shotNum)
     acceptanceRates.append(acceptanceRate(results))
     print(amiplitNum, acceptanceRate(results))
 #    print("With {} amplifications we have a {} acceptance rate{}".format(amiplitNum, acceptanceRate(results)))

@@ -18,7 +18,7 @@ circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kacz
 #circ.visualize()
 
 shotNum = 1000
-results = circ.run(shots=shotNum)
+results = circ.run(shotNum=shotNum)
 results = inference.filter_results(results)
 #df = pd.DataFrame(results,
 #                  columns=disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kaczka)"])

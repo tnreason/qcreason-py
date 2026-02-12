@@ -11,7 +11,7 @@ class PreparationTest(unittest.TestCase):
         operations = preparation.get_hadamard_gates(["a", "b", "c"]) + preparation.generate_formula_operations(
             ["and", ["imp", "b", "c"], ["not", "a"]])
         circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
-        samples = circ.run(shots=100)
+        samples = circ.run(shotNum=100)
         for idx, row in samples.iterrows():
             self.assertTrue(row["(not_a)"] ^ row["a"])
             self.assertTrue(row["(imp_b_c)"] == (not row["b"] or row["c"]))
@@ -25,7 +25,7 @@ class PreparationTest(unittest.TestCase):
                 amplificationColors=["ancilla_(and_(imp_b_c)_(not_a))"], amplificationNum=amplificationNum
             )
             circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations)
-            samples = circ.run(shots=10)
+            samples = circ.run(shotNum=10)
             for idx, row in samples.iterrows():
                 self.assertTrue(row["(not_a)"] ^ row["a"])
                 self.assertTrue(row["(imp_b_c)"] == (not row["b"] or row["c"]))
@@ -48,7 +48,7 @@ class PreparationTest(unittest.TestCase):
                                                                          "(and_jaszczur_kaczka)"] + ancillaVariables)
 
         shotNum = 100
-        samples = circ.run(shots=shotNum)
+        samples = circ.run(shotNum=shotNum)
 
         for idx, row in samples.iterrows():
             ## Hard formulas need to be satisfied when sampling ancillas are 1
@@ -76,7 +76,7 @@ class PreparationTest(unittest.TestCase):
         circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations,
                                                         measured_qubits=["(and_sledz_kaczka)",
                                                                          "ancilla_(and_sledz_kaczka)"])
-        samples = circ.run(shots=shotNum)
+        samples = circ.run(shotNum=shotNum)
         formulaTrue = len(samples[samples[["(and_sledz_kaczka)", "ancilla_(and_sledz_kaczka)"]].eq(1).all(axis=1)])
         accepted = len(samples[samples[["ancilla_(and_sledz_kaczka)"]].eq(1).all(axis=1)])
 
@@ -104,7 +104,7 @@ class PreparationTest(unittest.TestCase):
         circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations=operations, measured_qubits=["(and_sledz_kaczka)",
                                                                                                 "ancilla_(and_sledz_kaczka)",
                                                                                                 "ancilla_(not_sledz)"])
-        samples = circ.run(shots=shotNum)
+        samples = circ.run(shotNum=shotNum)
         formulaTrue = len(samples[
                               samples[["(and_sledz_kaczka)", "ancilla_(and_sledz_kaczka)", "ancilla_(not_sledz)"]].eq(
                                   1).all(axis=1)])
@@ -117,7 +117,7 @@ class PreparationTest(unittest.TestCase):
             ["8", ["11", "a", "c"], ["1", "b"]])
         circ = simulation.get_circuit(CIRCUIT_PROVIDER)(operations = operations)
         shotNum = 10
-        results = circ.run(shots=shotNum)
+        results = circ.run(shotNum=shotNum)
         for idx, row in results.iterrows():
             self.assertTrue(row["b"] == (not row["(1_b)"]))  # 1 is not
             self.assertTrue(row["(11_a_c)"] == (not row["a"] or row["c"]))  # 11 is imp

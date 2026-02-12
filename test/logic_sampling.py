@@ -10,7 +10,7 @@ circ.add_measurement(["b","(not_b)"])
 
 # Run the circuit
 shotNum = 100
-results = circ.run(shots=shotNum).values
+results = circ.run(shotNum=shotNum).values
 
 for i in range(shotNum):
     ## Check whether the b not_b logic is satisfied at each sample

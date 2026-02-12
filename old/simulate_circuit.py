@@ -14,7 +14,7 @@ sim = AerSimulator()
 tqc = qk.transpile(circ.circuitOperations, sim)
 
 # Run the transpiled circuit on the simulator
-job = sim.run(tqc, shots=1000)
+job = sim.run(tqc, shotNum=1000)
 result = job.result()
 
 # Get the counts of the results

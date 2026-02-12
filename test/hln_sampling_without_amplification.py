@@ -18,7 +18,7 @@ circ.add_measurement(disVariables + ["(imp_sledz_jaszczur)", "(and_jaszczur_kacz
 #circ.visualize()
 
 shotNum = 100
-results = circ.run(shots=shotNum).values
+results = circ.run(shotNum=shotNum).values
 satisfactionRate = [result[-1] for result in results].count(1)/shotNum
 print("Satisfaction rate is {}.".format(satisfactionRate))
 

@@ -17,7 +17,7 @@ circ.add_measurement(disVariables + ["(not_sledz)"] + ["samplingAncilla"] )
 circ.visualize()
 
 shotNum = 1000
-results = circ.run(shots=shotNum)
+results = circ.run(shotNum=shotNum)
 results = inference.filter_results(results)
 print(len(results))
 df = pd.DataFrame(results,
