@@ -20,7 +20,7 @@ class HLNBackwardCircuitAlternator:
         else:
             self.canParamDict = canParamDict
 
-        self.circuitProvider = infereneSpecDict.get("circuitProvider", "PennyLaneCircuit")
+        self.circuitProvider = infereneSpecDict.get("circuitProvider", "PennyLaneSimulator")
         self.amplificationNum = infereneSpecDict.get("amplificationNum", 2)
         self.shotNum = infereneSpecDict.get("shotNum", 1000)
 

@@ -22,7 +22,7 @@ class ContractionTest(unittest.TestCase):
         pandasCore = reasoning.QCReasonParticleContractor(coreDict=testCoreDict,
                                                           openColors=["red", "sledz"],
                                                           specDict={"shots": 10000,
-                                                                    "circuitProvider": "PennyLaneCircuit",
+                                                                    "circuitProvider": "PennyLaneSimulator",
                                                                     "amplificationNum": 1}).contract()
         converted = tnengine.convert(pandasCore, "NumpyCore")
         self.assertTrue(converted.values.shape == (2, 2))

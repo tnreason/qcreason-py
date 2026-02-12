@@ -10,6 +10,7 @@ gate_map = {"H": qml.Hadamard,
             "RZ": qml.RZ,
             "RY": qml.RY}
 
+
 def extract_qubit_colors(operationsList):
     colors = set()
     for op in operationsList:
@@ -23,6 +24,9 @@ class PennyLaneSimulator:
         self.operations = operations
         self.qubit_colors = qubit_colors if qubit_colors is not None else extract_qubit_colors(self.operations)
         self.measured_qubits = measured_qubits if measured_qubits is not None else self.qubit_colors
+
+    #def set_measurement(self, measured_qubits):
+    #    self.measured_qubits = measured_qubits
 
     def _build_qnode(self):
         """Build a QNode dynamically from the stored operations."""
@@ -40,13 +44,29 @@ class PennyLaneSimulator:
                 if op["unitary"].startswith("MC"):  ## Only to handle the old unitary names
                     op["unitary"] = op["unitary"][2:]
 
-                if not "parameters" in op or len(op["parameters"]) == 0: ## Should avoid empty parameter dictionaries
-                    qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
-                elif "angle" in op["parameters"]:
-                    qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires), control=controls.keys())(
-                        wires=op["target"][0])
+                if len(controls) == 0:
+
+                    if not "parameters" in op or len(
+                            op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
+                        gate_map[op["unitary"]](wires=op["target"][0])
+                    #                        qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
+                    elif "angle" in op["parameters"]:
+                        gate_map[op["unitary"]](op["parameters"]["angle"], wires=op["target"][0])
+                        #qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
+                        #         control=controls.keys())(
+                        #    wires=op["target"][0])
+                    else:
+                        raise ValueError(f"Unitary {op} not understood!")
                 else:
-                    raise ValueError(f"Unitary {op} not understood!")
+                    if not "parameters" in op or len(
+                            op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
+                        qml.ctrl(gate_map[op["unitary"]], control=controls.keys())(wires=op["target"][0])
+                    elif "angle" in op["parameters"]:
+                        qml.ctrl(lambda wires: gate_map[op["unitary"]](op["parameters"]["angle"], wires=wires),
+                                 control=controls.keys())(
+                            wires=op["target"][0])
+                    else:
+                        raise ValueError(f"Unitary {op} not understood!")
 
                 # Uncompute the control
                 for zQ in zeroControls:

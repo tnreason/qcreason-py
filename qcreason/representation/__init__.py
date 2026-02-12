@@ -11,6 +11,6 @@ from qcreason.representation.computation_activation_circuit import get_hln_ca_op
 
 from qcreason.representation.activation_circuits import tn_to_circuit, activation_core_to_circuit
 
-standardCircuitProvider = "PennyLaneCircuit"
+standardCircuitProvider = "PennyLaneSimulator"
 standardAncillaColor = "samplingAncilla"
 

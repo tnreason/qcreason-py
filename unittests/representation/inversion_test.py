@@ -29,7 +29,7 @@ class InversionTest(unittest.TestCase):
                       + representation.generate_formula_operations(["not", "A"], adjoint=True)
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit()(specDict={"operations": operations})
+        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations)
         samples = circuit.run(10)
         for i, row in samples.iterrows():
             self.assertTrue(all([row[dQubit] == 0 for dQubit in distributedQubits]))
@@ -44,7 +44,7 @@ class InversionTest(unittest.TestCase):
                       + representation.generate_formula_operations(formula2, adjoint=True, headColor="Y")
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit()(specDict={"operations": operations})
+        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations)
         samples = circuit.run(shotNum)
         for i, row in samples.iterrows():
             self.assertTrue(all([row[dQubit] == 0 for dQubit in distributedQubits]))

@@ -25,11 +25,14 @@ class HLNForwardCircuitSampler:
                                  self.formulaDict],
             amplificationNum=self.amplificationNum
         )
-        circuit = engine.get_circuit(self.circuitProvider)(specDict={"operations": operations})
-        circuit.add_measurement(
-            [representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in formulaKeys] +
-            ["ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
-             self.formulaDict]) # ! Need to measure all ancilla, not only those infered
+        circuit = engine.get_circuit(self.circuitProvider)(
+            operations=operations,
+            measured_qubits=[representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
+                             formulaKeys] +
+                            ["ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey
+                             in self.formulaDict])
+        #circuit.add_measurement(
+        #)  # ! Need to measure all ancilla, not only those infered
         samples = filter_results(circuit.run(shots=self.shotNum), ancillaColors=[
             "ancilla_" + representation.get_formula_string(self.formulaDict[formulaKey]) for formulaKey in
             self.formulaDict])

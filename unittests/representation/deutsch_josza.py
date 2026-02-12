@@ -30,8 +30,7 @@ class DeutschJoszaTest(unittest.TestCase):
                       + representation.generate_formula_operations(formula, headColor=headColor)
                       + hadamardOperations
                       )
-        circuit = engine.get_circuit()(specDict={"operations": operations})
-        circuit.add_measurement(distributedQubits)
+        circuit = engine.get_circuit("PennyLaneSimulator")(operations=operations, measured_qubits=distributedQubits)
         samples = circuit.run(shotNum)
         return sum(
             [1 for i, row in samples.iterrows() if all([row[dQubit] == 0 for dQubit in distributedQubits])]) / shotNum

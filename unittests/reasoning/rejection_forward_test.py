@@ -7,7 +7,7 @@ import math
 
 class RejectionForwardTest(unittest.TestCase):
     def test_forward_inference(self):
-        circuitProvider = "PennyLaneCircuit"
+        circuitProvider = "PennyLaneSimulator"
         weightedFormulas = {
             "f1": ["imp", "sledz", "jaszczur", True],
             "f2": ["and", "jaszczur", "kaczka", False],

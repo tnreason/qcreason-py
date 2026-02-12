@@ -23,16 +23,18 @@ class QCReasonParticleContractor:
             amplificationColors=["ancilla_" + coreKey for coreKey in self.coreDict],
             amplificationNum=self.specDict.get("amplificationNum", 0))
         circuit = engine.get_circuit(
-            self.specDict.get("circuitProvider", representation.standardCircuitProvider))(
-            specDict={"operations": operations})
-        circuit.add_measurement(self.openColors + ["ancilla_" + coreKey for coreKey in self.coreDict])
+            self.specDict.get("circuitProvider", representation.standardCircuitProvider))(operations=operations,
+                                                                                          measured_qubits=self.openColors + [
+                                                                                              "ancilla_" + coreKey for
+                                                                                              coreKey in self.coreDict])
+        #circuit.add_measurement()
         filteredResults = rs.filter_results(circuit.run(shots=self.specDict.get("shots", 1000)),
                                             ancillaColors=["ancilla_" + coreKey for coreKey in self.coreDict],
                                             keepColors=self.openColors)
         return tnengine.get_core("PandasCore")(colors=self.openColors,
-                                        shape=[get_shape_dict(self.coreDict)[color] for color in self.openColors],
-                                        values=filteredResults)
-
+                                               shape=[get_shape_dict(self.coreDict)[color] for color in
+                                                      self.openColors],
+                                               values=filteredResults)
 
 
 def get_shape_dict(coreDict):
@@ -41,6 +43,8 @@ def get_shape_dict(coreDict):
     for coreKey in coreDict:
         for color, dim in zip(coreDict[coreKey].colors, coreDict[coreKey].values.shape):
             shapeDict[color] = dim
-            if not dim==2:
-                raise ValueError("Only leg dimension 2 is supported so far, but core '{}' has leg '{}' with dimension {}.".format(coreKey, color, dim))
+            if not dim == 2:
+                raise ValueError(
+                    "Only leg dimension 2 is supported so far, but core '{}' has leg '{}' with dimension {}.".format(
+                        coreKey, color, dim))
     return shapeDict

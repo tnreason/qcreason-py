@@ -1,6 +1,6 @@
 from qcreason.engine.helpers import extract_qubit_colors
 
-defaultCircuitType = "PennyLaneCircuit"
+defaultCircuitType = "PennyLaneSimulator"
 
 def get_circuit(circuitType=None):
     if circuitType is None:
@@ -9,7 +9,7 @@ def get_circuit(circuitType=None):
         from qcreason.engine import pennylane_simulation as ps
         return ps.PennyLaneSimulator
 
-    ## OLD to be adjusted
+    ## OLD to be dropped
     if circuitType == "QiskitCircuit":
         from qcreason.engine import qiskit_circuits as qkc
         return qkc.QiskitCircuit
