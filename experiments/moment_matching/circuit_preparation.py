@@ -20,8 +20,14 @@ def add_rotations(formula, repNum, oldDistPreparations, distributedQubits, ancil
     return oldDistPreparations + get_prep_f_grover(oldDistPreparations, formula, distributedQubits,
                                                    ancillaQubit) * repNum
 
-def filter_headOperations(operationList, headColor):
-    return [operation for operation in operationList if headColor in operation["target"]]
+def uncompute_auxiliary(operationList, headColor):
+    """
+    Removes the qubits shaping the head operations - those do not have to be uncomputed!
+    :param operationList:
+    :param headColor:
+    :return:
+    """
+    return [operation for operation in operationList if headColor not in operation["target"]]
 
 def get_prep_f_grover(prepOps, formula, distributedQubits, ancillaQubit):
     """
@@ -35,7 +41,7 @@ def get_prep_f_grover(prepOps, formula, distributedQubits, ancillaQubit):
     :param ancillaQubit:
     :return:
     """
-    return preparation.generate_formula_operations(formula, headColor=ancillaQubit) + filter_headOperations(
+    return preparation.generate_formula_operations(formula, headColor=ancillaQubit) + uncompute_auxiliary(
         preparation.generate_formula_operations(formula, adjoint=True, headColor=ancillaQubit),
         headColor=ancillaQubit) + prepOps[::-1] + preparation.get_groundstate_reflexion_operations(
         distributedQubits) + prepOps
@@ -93,7 +99,7 @@ def estimate_rotations(currentMean, targetMean, maxRotations=10, lossFunction=No
 if __name__ == "__main__":
     testOperations = preparation.generate_formula_operations(["or", ["and", "sledz", "jaszczur"], ["not", "slimak"]],
                                                              headColor="Ancilla")
-    assert len(filter_headOperations(testOperations, "Ancilla")) == len(testOperations) - 2
+    assert len(uncompute_auxiliary(testOperations, "Ancilla")) == len(testOperations) - 2
 
     # Check overrotation prevention
     assert len(get_achievable_means(0.98123, 100)) == 1

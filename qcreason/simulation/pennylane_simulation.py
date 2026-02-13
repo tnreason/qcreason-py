@@ -10,7 +10,10 @@ GATE_MAP = {"H": qml.Hadamard,
             "Y": qml.PauliY,
             "Z": qml.PauliZ,
             "RZ": qml.RZ,
-            "RY": qml.RY}
+            "RY": qml.RY,
+            "RX": qml.RX,
+            "P": qml.PhaseShift,
+            "SWAP": qml.SWAP}
 STANDARD_GATES = {qml.CNOT, qml.PauliX, qml.PauliY, qml.RZ, qml.RY, qml.RZ, qml.H}
 
 
@@ -37,20 +40,20 @@ class PennyLaneSimulator:
                     # Control free gates
                     if not "parameters" in op or len(
                             op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
-                        GATE_MAP[op["unitary"]](wires=op["target"][0])
+                        GATE_MAP[op["unitary"]](wires=op["target"])
                     elif "angle" in op["parameters"]:
-                        GATE_MAP[op["unitary"]](op["parameters"]["angle"], wires=op["target"][0])
+                        GATE_MAP[op["unitary"]](op["parameters"]["angle"], wires=op["target"])
                     else:
                         raise ValueError(f"Unitary {op} not understood!")
                 else:
                     # Control free gates, need qml.ctrl
                     if not "parameters" in op or len(
                             op["parameters"]) == 0:  ## Should avoid empty parameter dictionaries
-                        qml.ctrl(GATE_MAP[op["unitary"]], control=controls.keys())(wires=op["target"][0])
+                        qml.ctrl(GATE_MAP[op["unitary"]], control=controls.keys())(wires=op["target"])
                     elif "angle" in op["parameters"]:
                         qml.ctrl(lambda wires: GATE_MAP[op["unitary"]](op["parameters"]["angle"], wires=wires),
                                  control=controls.keys())(
-                            wires=op["target"][0])
+                            wires=op["target"])
                     else:
                         raise ValueError(f"Unitary {op} not understood!")
 

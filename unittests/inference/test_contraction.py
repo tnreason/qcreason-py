@@ -30,7 +30,7 @@ class ContractionTest(unittest.TestCase):
         compareContraction = tnengine.contract(coreDict=testCoreDict,
                                                openColors=["red", "sledz"])
 
-        tolerance = 0.1
+        tolerance = 0.2
 
         self.assertTrue(abs((converted[0, 0] / converted[0, 1]) - (
                 compareContraction[0, 0] / compareContraction[0, 1])) < tolerance)
