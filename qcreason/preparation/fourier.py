@@ -18,7 +18,6 @@ def get_fourier_circuit(qubits):
 
         # Subsequent qubits provide the control phases
         for l, control_q in enumerate(qubits[i + 1:]):
-            # l starts at 0, so 2**(0+1) = 2. Angle = pi/2, then pi/4, etc.
             angle = math.pi / (2 ** (l + 1))
             ops.append({
                 "unitary": "P",

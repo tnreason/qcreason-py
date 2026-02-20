@@ -1,3 +1,5 @@
+import copy
+
 def extract_qubit_colors(operationsList):
     colors = set()
     for op in operationsList:
@@ -38,7 +40,7 @@ def get_groundstate_reflexion_operations(qubitColors):
     return ops
 
 def add_control(operation, addControlDict):
-    extendedControlDict = operation.get("control", {})
+    extendedControlDict = copy.deepcopy(operation.get("control", {}))
     extendedControlDict.update(**addControlDict)
     return {**{key: operation[key] for key in operation if key != "control"}, "control": extendedControlDict}
 
