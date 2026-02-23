@@ -3,13 +3,12 @@ import unittest
 from inference.test_rejection_forward import RejectionForwardTest
 from inference.test_rejection_backward import RejectionBackwardTest
 from inference.test_contraction import ContractionTest
+from inference.test_moment_estimation import MomentEstimationTest
 
 from preparation.test_hln_augmentation import PreparationTest
 from preparation.test_inversion import InversionTest
 from preparation.test_deutsch_josza import DeutschJoszaTest
 from preparation.test_phase_estimation import PhaseEstimationTest
-
-unittest.main()
 
 
 def suite():
@@ -23,7 +22,8 @@ def suite():
         PreparationTest,
         InversionTest,
         DeutschJoszaTest,
-        PhaseEstimationTest
+        PhaseEstimationTest,
+        MomentEstimationTest
     ]
 
     for test_class in test_classes:

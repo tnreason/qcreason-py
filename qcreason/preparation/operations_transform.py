@@ -1,5 +1,6 @@
 import copy
 
+
 def extract_qubit_colors(operationsList):
     colors = set()
     for op in operationsList:
@@ -32,12 +33,14 @@ def get_groundstate_reflexion_operations(qubitColors):
     """
     Generate the list of JSON-style operations implementing
     reflection about the ground state |000...0⟩ using X → MCZ → X.
+    ! Global sign in addition to reflection, which can be ignored unless adding controls
     """
     ops = [{"unitary": "X", "target": [color], "control": {}} for color in qubitColors]
     ops.append(
         {"unitary": "Z", "target": [qubitColors[-1]], "control": {color: 1 for color in qubitColors[:-1]}})
     ops += [{"unitary": "X", "target": [color], "control": {}} for color in qubitColors]
     return ops
+
 
 def add_control(operation, addControlDict):
     extendedControlDict = copy.deepcopy(operation.get("control", {}))
@@ -48,8 +51,10 @@ def add_control(operation, addControlDict):
 def add_control_to_ops(ops, addControlDict):
     return [add_control(op, addControlDict) for op in ops]
 
+
 def get_hadamard_gates(qubitColors):
     return [{"unitary": "H", "target": [color]} for color in qubitColors]
+
 
 def amplify_ones_state(preparingOperations, amplificationColors, amplificationNum=1):
     """
