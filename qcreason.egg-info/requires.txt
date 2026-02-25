@@ -1,0 +1,3 @@
+pandas>=2.3.3
+pennylane>=0.43.2
+tnreason>=2.0.0

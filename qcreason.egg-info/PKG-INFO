@@ -1,0 +1,35 @@
+Metadata-Version: 2.4
+Name: qcreason
+Version: 0.0.0
+Summary: A package for reasoning based on quantum circuits
+Home-page: https://github.com/tnreason/qcreason-py
+Author: Alex Goessmann
+Author-email: alex.goessmann@web.de
+License: AGPL-3.0
+Keywords: neuro-symbolic AI,tensor networks,quantum circuits
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.3.3
+Requires-Dist: pennylane>=0.43.2
+Requires-Dist: tnreason>=2.0.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Quantum Circuit Reasoning
+
+This is an experimental library to create Quantum Circuits based on the mod2-basis+ CP decomposition of a targeted tensor.
+
+Documentation can be found in the [notes from the tnreason project](https://github.com/tnreason/tnreason-notes).

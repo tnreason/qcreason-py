@@ -1,6 +1,6 @@
 import pennylane as qml
 
-import matplotlib.pyplot as plt
+
 import pandas as pd
 
 from qcreason.simulation import helpers as hp
@@ -66,6 +66,8 @@ class PennyLaneSimulator:
         return circuit
 
     def visualize(self):
+        import matplotlib.pyplot as plt
+
         """Draw the current circuit using PennyLane's drawer."""
         circuit = self._build_qnode()
 

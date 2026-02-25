@@ -19,11 +19,12 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence"
     ],
     install_requires=[
-        "pandas"
-        #"qiskit>=1.2.4",
+        "pandas>=2.3.3",
+        "pennylane>=0.43.2",
+        "tnreason>=2.0.0"
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     license="AGPL-3.0",
-    url="https://github.com/algoessmann/quantum-circuit-reasoning",
-    keywords="markov logic networks, tensor networks, quantum circuits"
+    url="https://github.com/tnreason/qcreason-py",
+    keywords="neuro-symbolic AI, tensor networks, quantum circuits"
 )

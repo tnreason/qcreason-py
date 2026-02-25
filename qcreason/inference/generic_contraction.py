@@ -3,7 +3,7 @@ from qcreason import simulation
 
 from qcreason.inference import rejection_sampling as rs
 
-from tnreason import engine as tnengine
+from tnreason import engine
 
 
 class QCReasonParticleContractor:
@@ -30,7 +30,7 @@ class QCReasonParticleContractor:
         filteredResults = rs.filter_results(circuit.run(shotNum=self.specDict.get("shots", 1000)),
                                             ancillaColors=["ancilla_" + coreKey for coreKey in self.coreDict],
                                             keepColors=self.openColors)
-        return tnengine.get_core("PandasCore")(colors=self.openColors,
+        return engine.get_core("PandasCore")(colors=self.openColors,
                                                shape=[get_and_check_shape_dict(self.coreDict)[color] for color in
                                                       self.openColors],
                                                values=filteredResults)
